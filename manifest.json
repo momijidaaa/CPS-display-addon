@@ -1,0 +1,26 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "CPS Display",
+        "name": "CPS Display",
+        "uuid": "2f4b5d6e-8c7a-4b3d-9e1f-0a2b3c4d5e6f",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 20, 0]
+    },
+    "modules": [
+        {
+            "description": "Scripting Module",
+            "type": "script",
+            "language": "javascript",
+            "uuid": "7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+            "version": [1, 0, 0],
+            "entry": "main.js"
+        }
+    ],
+    "dependencies": [
+        {
+            "module_name": "@minecraft/server",
+            "version": "1.10.0"
+        }
+    ]
+}
