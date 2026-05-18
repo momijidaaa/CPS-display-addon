@@ -14,48 +14,33 @@ function logClick(player) {
     clicks.push(now);
 }
 
-world.afterEvents.entityHitEntity.subscribe((event) => {
-    const damagingEntity = event.damagingEntity;
-    if (damagingEntity && damagingEntity.typeId === "minecraft:player") {
-        logClick(damagingEntity);
-    }
-});
-
-world.afterEvents.playerBreakBlock.subscribe((event) => {
-    logClick(event.player);
-});
-
-world.afterEvents.itemUse.subscribe((event) => {
-    logClick(event.source);
-});
-
-world.afterEvents.entityHitBlock.subscribe((event) => {
-    const damagingEntity = event.damagingEntity;
-    if (damagingEntity && damagingEntity.typeId === "minecraft:player") {
-        logClick(damagingEntity);
-    }
-});
-
-world.afterEvents.itemUseOn.subscribe((event) => {
-    logClick(event.source);
-});
-
 system.runInterval(() => {
     const now = Date.now();
     const players = world.getAllPlayers();
 
     for (const player of players) {
+        const input = player.inputInfo;
+        if (input) {
+            if (input.isAttacking || input.isUsingItem) {
+                if (!player.dynamicProperties?.get("is_clicking")) {
+                    logClick(player);
+                    player.setDynamicProperty("is_clicking", true);
+                }
+            } else {
+                player.setDynamicProperty("is_clicking", false);
+            }
+        }
+
         if (!playerClicks.has(player.id)) {
             playerClicks.set(player.id, []);
         }
 
         let clicks = playerClicks.get(player.id);
-
         clicks = clicks.filter(time => now - time < 1000);
         playerClicks.set(player.id, clicks);
 
         const cps = clicks.length;
 
-        player.onScreenDisplay.setActionBar(`\n\n\n§b§lCPS: ${cps}`);
+        player.onScreenDisplay.setActionBar(`§b§lCPS: ${cps}`);
     }
 }, 1);
