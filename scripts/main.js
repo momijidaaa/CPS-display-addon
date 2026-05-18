@@ -29,6 +29,17 @@ world.afterEvents.itemUse.subscribe((event) => {
     logClick(event.source);
 });
 
+world.afterEvents.entityHitBlock.subscribe((event) => {
+    const damagingEntity = event.damagingEntity;
+    if (damagingEntity && damagingEntity.typeId === "minecraft:player") {
+        logClick(damagingEntity);
+    }
+});
+
+world.afterEvents.itemUseOn.subscribe((event) => {
+    logClick(event.source);
+});
+
 system.runInterval(() => {
     const now = Date.now();
     const players = world.getAllPlayers();
@@ -45,6 +56,6 @@ system.runInterval(() => {
 
         const cps = clicks.length;
 
-        player.onScreenDisplay.setActionBar(`§b§lCPS: ${cps}\n\n\n`);
+        player.onScreenDisplay.setActionBar(`\n\n\n§b§lCPS: ${cps}`);
     }
 }, 1);
